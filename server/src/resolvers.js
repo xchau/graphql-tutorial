@@ -10,20 +10,38 @@ const channels = [{
   }, {
     id: '2',
     text: 'hello soccer world cup',
+  }, {
+    id: '3',
+    text: 'message3'
+  }, {
+    id: '4',
+    text: 'message4'
+  }, {
+    id: '5',
+    text: 'message5'
+  }, {
+    id: '6',
+    text: 'message6'
+  }, {
+    id: '7',
+    text: 'message7'
+  }, {
+    id: '8',
+    text: 'message8'
   }]
 }, {
   id: '2',
   name: 'baseball',
   messages: [{
-    id: '3',
+    id: '9',
     text: 'baseball is life',
   }, {
-    id: '4',
+    id: '10',
     text: 'hello baseball world series',
   }]
 }];
 let nextId = 3;
-let nextMessageId = 5;
+let nextMessageId = 11;
 
 const pubsub = new PubSub();
 
