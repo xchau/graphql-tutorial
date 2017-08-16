@@ -10,6 +10,7 @@ type Channel {
   id: ID!                # "!" denotes a required field
   name: String
   messages: [Message]!
+  #messages: MessageFeed  # messages will be returned in a MessageFeed object
 }
 
 input MessageInput{
@@ -20,6 +21,11 @@ input MessageInput{
 type Message {
   id: ID!
   text: String
+}
+
+type MessageFeed {
+  cursor: ID!,
+  messages: [Message]! # messages in the message feed will be a list of messages
 }
 
 # This type specifies the entry points into our API

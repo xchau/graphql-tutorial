@@ -51,7 +51,14 @@ export const resolvers = {
       return channels;
     },
     channel: (root, { id }) => {
-      return channels.find(channel => channel.id === id);
+      //return channels.find(channel => channel.id === id);
+      let channel = channels.find(channel => channel.id === id);
+      let lessChannel = {
+        id: channel.id,
+        name: channel.name, 
+        messages: channel.messages.slice(4, 4+2) // temp: hardcode limit and cursor
+      }
+      return lessChannel;
     },
   },
   Mutation: {
