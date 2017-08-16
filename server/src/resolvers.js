@@ -53,11 +53,18 @@ export const resolvers = {
     channel: (root, { id }) => {
       //return channels.find(channel => channel.id === id);
       let channel = channels.find(channel => channel.id === id);
+      let messageFeed = {
+        messages: channel.messages.slice(6-2, 6), // temp hardcode limit and cursor
+        cursor: 6-2 // hardcode: old cursor at 6, so move it back 2 items
+      }
+      channel.messageFeed = messageFeed;
       let lessChannel = {
         id: channel.id,
         name: channel.name, 
-        messages: channel.messages.slice(4, 4+2) // temp: hardcode limit and cursor
+        //messageFeed: channel.messages.slice(4, 4+2) // temp: hardcode limit and cursor
+        messageFeed: messageFeed
       }
+      console.log('lessChannel: ', lessChannel);
       return lessChannel;
     },
   },
@@ -74,6 +81,7 @@ export const resolvers = {
 
       const newMessage = { id: String(nextMessageId++), text: message.text };
       channel.messages.push(newMessage);
+      channel.messageFeed.messages.push(newMessage);
 
       pubsub.publish('messageAdded', { messageAdded: newMessage, channelId: message.channelId });
 

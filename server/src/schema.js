@@ -9,8 +9,8 @@ const typeDefs = `
 type Channel {
   id: ID!                # "!" denotes a required field
   name: String
-  messages: [Message]!
-  #messages: MessageFeed  # messages will be returned in a MessageFeed object
+  messages: [Message]
+  messageFeed: MessageFeed  # messages will be returned in a MessageFeed object
 }
 
 input MessageInput{

@@ -23,6 +23,7 @@ class ChannelDetails extends Component {
         const newMessage = subscriptionData.data.messageAdded;
 
         // don't double add the message
+        console.log('prev.channel: ', prev.channel)
         if (!prev.channel.messages.find((msg) => msg.id === newMessage.id)) {
           return Object.assign({}, prev, {
             channel: Object.assign({}, prev.channel, {
@@ -38,6 +39,7 @@ class ChannelDetails extends Component {
 
   render() {
     const { data: {loading, error, channel }, match } = this.props;
+    console.log('channel: ', channel);
 
     if (loading) {
       return <ChannelPreview channelId={match.params.channelId}/>;
@@ -48,13 +50,12 @@ class ChannelDetails extends Component {
     if(channel === null){
       return <NotFound />
     }
-
     return (
       <div>
         <div className="channelName">
           {channel.name}
         </div>
-        <MessageList messages={channel.messages}/>
+        <MessageList messages={channel.messageFeed.messages}/>
       </div>);
   }
 }
@@ -64,9 +65,11 @@ export const channelDetailsQuery = gql`
     channel(id: $channelId) {
       id
       name
-      messages {
-        id
-        text
+      messageFeed {
+        messages {
+          id
+          text
+        }
       }
     }
   }
