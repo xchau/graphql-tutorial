@@ -40,7 +40,6 @@ class ChannelDetails extends Component {
   render() {
     const { data: {loading, error, channel }, match } = this.props;
     console.log('channel: ', channel);
-
     if (loading) {
       return <ChannelPreview channelId={match.params.channelId}/>;
     }
@@ -61,11 +60,11 @@ class ChannelDetails extends Component {
 }
 
 export const channelDetailsQuery = gql`
-  query ChannelDetailsQuery($channelId : ID!) {
-    channel(id: $channelId) {
+  query ChannelDetailsQuery($channelId : ID!, $cursor: Int) {
+    channel(id: $channelId, cursor: $cursor) {
       id
       name
-      messageFeed {
+      messageFeed(cursor: $cursor) {
         messages {
           id
           text
@@ -76,7 +75,7 @@ export const channelDetailsQuery = gql`
 `;
 
 const messagesSubscription = gql`
-  subscription messageAdded($channelId: ID!) {
+  subscription messageAdded($channelId: Int) {
     messageAdded(channelId: $channelId) {
       id
       text
@@ -86,6 +85,9 @@ const messagesSubscription = gql`
 
 export default (graphql(channelDetailsQuery, {
   options: (props) => ({
-    variables: { channelId: props.match.params.channelId },
+    variables: { 
+      channelId: props.match.params.channelId,
+      cursor: 5,
+    },
   }),
 })(ChannelDetails));

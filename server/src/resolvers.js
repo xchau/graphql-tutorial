@@ -50,18 +50,24 @@ export const resolvers = {
     channels: () => {
       return channels;
     },
-    channel: (root, { id }) => {
-      //return channels.find(channel => channel.id === id);
+    //channel: (root, { id }) => {
+    channel: (root, args) => {
+      console.log('args: ', args)
+      let id = args['id'];
+      let cursor = args['cursor'];
+      //let cursor = args['cursor'];
       let channel = channels.find(channel => channel.id === id);
       let messageFeed = {
-        messages: channel.messages.slice(6-2, 6), // temp hardcode limit and cursor
-        cursor: 6-2 // hardcode: old cursor at 6, so move it back 2 items
+        //messages: channel.messages.slice(6-2, 6), // temp hardcode limit and cursor
+        messages: channel.messages.slice(cursor-2, cursor),
+        cursor: args['cursor'] // hardcode: old cursor at 6, so move it back 2 items
+        //cursor: newCursor
       }
+      console.log('messageFeed.cursor: ', messageFeed.cursor)
       channel.messageFeed = messageFeed;
       let lessChannel = {
         id: channel.id,
         name: channel.name, 
-        //messageFeed: channel.messages.slice(4, 4+2) // temp: hardcode limit and cursor
         messageFeed: messageFeed
       }
       console.log('lessChannel: ', lessChannel);
