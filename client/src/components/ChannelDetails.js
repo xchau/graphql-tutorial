@@ -100,14 +100,13 @@ export default (graphql(channelDetailsQuery, {
   }),
 
   props: (props) => {
-    console.log('props, line 103: ', props);
     return Object.assign(props, {
       loadMore: () => {
         return props.data.fetchMore({
           variables: {
             //channelId: props.match.params.channelId,
             channelId: props.data.channel.id ? props.data.channel.id : props.match.params.channelId, 
-            cursor: 6
+            cursor: props.data.variables.cursor - props.data.channel.messageFeed.messages.length
           },
           updateQuery(previousResult, { fetchMoreResult }) {
             let prevMessageFeed = previousResult.channel.messageFeed

@@ -60,7 +60,7 @@ export const resolvers = {
       let messageFeed = {
         //messages: channel.messages.slice(6-2, 6), // temp hardcode limit and cursor
         messages: channel.messages.slice(cursor-2, cursor),
-        cursor: args['cursor'] // hardcode: old cursor at 6, so move it back 2 items
+        cursor: args['cursor'] - 2 // hardcode: old cursor at 6, so move it back 2 items
         //cursor: newCursor
       }
       console.log('messageFeed.cursor: ', messageFeed.cursor)
