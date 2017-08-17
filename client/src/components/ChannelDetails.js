@@ -38,8 +38,10 @@ class ChannelDetails extends Component {
   }
 
   render() {
-    const { data: {loading, error, channel }, match } = this.props;
+    console.log('this.props: ', this.props)
+    const { data: {loading, error, channel }, match, loadMore } = this.props;
     console.log('channel: ', channel);
+    console.log('loadMore: ', loadMore);
     if (loading) {
       return <ChannelPreview channelId={match.params.channelId}/>;
     }
@@ -51,11 +53,17 @@ class ChannelDetails extends Component {
     }
     return (
       <div>
+      <div>
         <div className="channelName">
           {channel.name}
         </div>
         <MessageList messages={channel.messageFeed.messages}/>
-      </div>);
+      </div>
+      <button onClick={loadMore}>
+        Load More
+      </button>
+      </div>
+    );
   }
 }
 
@@ -87,7 +95,26 @@ export default (graphql(channelDetailsQuery, {
   options: (props) => ({
     variables: { 
       channelId: props.match.params.channelId,
-      cursor: 5,
+      cursor: 8,
     },
   }),
+
+  props: (props) => {
+    console.log('props: ', props);
+    return Object.assign(props, {
+      loadMore: () => {
+        return props.data.fetchMore({
+          variables: {
+            //channelId: props.match.params.channelId,
+            channelId: props.data.channel.id ? props.data.channel.id : props.match.params.channelId, 
+            cursor: 6
+          },
+          updateQuery(previousResult, { fetchMoreResult }) {
+            console.log('previousResult ', previousResult)
+            console.log('fetchMoreResult ', fetchMoreResult)
+          }
+        });
+      }
+    });
+  }
 })(ChannelDetails));

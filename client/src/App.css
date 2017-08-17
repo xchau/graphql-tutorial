@@ -59,7 +59,7 @@ div.NotFound {
 
 div.channelsList {
   padding: 0 30px;
-  position: fixed;
+   position: fixed; 
 }
 
 div.channel {
@@ -127,7 +127,6 @@ div.channelName {
 
 div.messagesList {
   padding: 0 30px;
-  position: fixed;
 }
 
 div.message {
