@@ -100,7 +100,7 @@ export default (graphql(channelDetailsQuery, {
   }),
 
   props: (props) => {
-    console.log('props: ', props);
+    console.log('props, line 103: ', props);
     return Object.assign(props, {
       loadMore: () => {
         return props.data.fetchMore({
@@ -110,8 +110,16 @@ export default (graphql(channelDetailsQuery, {
             cursor: 6
           },
           updateQuery(previousResult, { fetchMoreResult }) {
-            console.log('previousResult ', previousResult)
-            console.log('fetchMoreResult ', fetchMoreResult)
+            let prevMessageFeed = previousResult.channel.messageFeed
+            let newMessageFeed = fetchMoreResult.channel.messageFeed
+            const newChannelData = Object.assign({}, previousResult.channel, {
+                messageFeed: {
+                  messages: [...fetchMoreResult.channel.messageFeed.messages, ...previousResult.channel.messageFeed.messages]
+                }
+            });
+
+            const newData = Object.assign({}, previousResult, { channel: newChannelData });
+            return newData;
           }
         });
       }
