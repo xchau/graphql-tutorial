@@ -3,6 +3,8 @@ import React from 'react';
 import AddMessage from './AddMessage';
 
 const MessageList = ({ messages }) => {
+  console.log('in MessageList component')
+  console.log('messages: ', messages)
   return (
     <div className="messagesList">
       { messages.map( message =>

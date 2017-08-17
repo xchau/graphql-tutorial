@@ -4,6 +4,7 @@ import { channelDetailsQuery } from './ChannelDetails';
 import { withRouter } from 'react-router';
 
 const AddMessage = ({ mutate, match }) => {
+  console.log('in AddMessage')
   const handleKeyUp = (evt) => {
     if (evt.keyCode === 13) {
       mutate({
@@ -32,6 +33,7 @@ const AddMessage = ({ mutate, match }) => {
           // don't double add the message
           if (!data.channel.messages.find((msg) => msg.id === addMessage.id)) {
             // Add our Message from the mutation to the end.
+            data.channel.messageFeed.push(addMessage)
             data.channel.messages.push(addMessage);
           }
           // Write the data back to the cache.

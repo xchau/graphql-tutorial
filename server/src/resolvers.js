@@ -52,7 +52,6 @@ export const resolvers = {
     },
     //channel: (root, { id }) => {
     channel: (root, args) => {
-      console.log('args: ', args)
       let id = args['id'];
       let cursor = args['cursor'];
       //let cursor = args['cursor'];
@@ -63,14 +62,12 @@ export const resolvers = {
         cursor: args['cursor'] - 2 // hardcode: old cursor at 6, so move it back 2 items
         //cursor: newCursor
       }
-      console.log('messageFeed.cursor: ', messageFeed.cursor)
       channel.messageFeed = messageFeed;
       let lessChannel = {
         id: channel.id,
         name: channel.name, 
         messageFeed: messageFeed
       }
-      console.log('lessChannel: ', lessChannel);
       return lessChannel;
     },
   },
@@ -81,13 +78,14 @@ export const resolvers = {
       return newChannel;
     },
     addMessage: (root, { message }) => {
+      console.log('in addMessage mutation')
+      console.log('message: ', message)
       const channel = channels.find(channel => channel.id === message.channelId);
       if(!channel)
         throw new Error("Channel does not exist");
 
       const newMessage = { id: String(nextMessageId++), text: message.text };
       channel.messages.push(newMessage);
-      channel.messageFeed.messages.push(newMessage);
 
       pubsub.publish('messageAdded', { messageAdded: newMessage, channelId: message.channelId });
 
