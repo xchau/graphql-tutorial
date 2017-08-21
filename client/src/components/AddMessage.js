@@ -4,7 +4,6 @@ import { channelDetailsQuery } from './ChannelDetails';
 import { withRouter } from 'react-router';
 
 const AddMessage = ({ mutate, match }) => {
-  console.log('in AddMessage')
   const handleKeyUp = (evt) => {
     if (evt.keyCode === 13) {
       mutate({
@@ -40,6 +39,7 @@ const AddMessage = ({ mutate, match }) => {
             query: channelDetailsQuery,
             variables: {
               channelId: match.params.channelId,
+              
             },
             data
           });
