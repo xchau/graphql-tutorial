@@ -1,5 +1,7 @@
 import { PubSub } from 'graphql-subscriptions';
 import { withFilter } from 'graphql-subscriptions';
+import faker from 'faker';
+
 
 const channels = [{
   id: '1',
@@ -33,15 +35,26 @@ const channels = [{
   id: '2',
   name: 'baseball',
   messages: [{
-    id: '9',
+    id: '50',
     text: 'baseball is life',
   }, {
-    id: '10',
+    id: '51',
     text: 'hello baseball world series',
   }]
 }];
+
+// use faker to generate random messages in soccer channel
+const channel = channels.find(channel => channel.name === 'soccer');
+let id;
+for (id = 9; id < 50; id++) {
+  channel.messages.push({
+    id: id,
+    text: faker.random.words()
+  });
+}
+
 let nextId = 3;
-let nextMessageId = 11;
+let nextMessageId = 52;
 
 const pubsub = new PubSub();
 
