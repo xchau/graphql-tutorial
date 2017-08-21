@@ -46,12 +46,11 @@ export const resolvers = {
     channel: (root, args) => {
       let id = args.id
       let cursor = args.cursor
-      let limit = args.limit
       let channel = channels.find(channel => channel.id === id);
       if (cursor == undefined && messageFeed == undefined) {
         cursor = channel.messages.length;
       }
-
+      let limit = 10;
       let messageFeed = {
         messages: channel.messages.slice(cursor-limit, cursor),
         cursor: cursor - limit
