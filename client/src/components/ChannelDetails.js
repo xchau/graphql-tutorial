@@ -48,15 +48,15 @@ class ChannelDetails extends Component {
     }
     return (
       <div>
+        <button onClick={loadOlderMessages}>
+         Load Older Messages
+        </button>
       <div>
         <div className="channelName">
           {channel.name}
         </div>
         <MessageList messages={channel.messageFeed.messages}/>
       </div>
-      <button onClick={loadOlderMessages}>
-        Load More
-      </button>
       </div>
     );
   }
@@ -96,7 +96,7 @@ export default (graphql(channelDetailsQuery, {
   }),
 
   props: (props) => {
-    return Object.assign(props, {
+    return {...props,
       loadOlderMessages: () => {
         return props.data.fetchMore({
           variables: {
@@ -107,17 +107,17 @@ export default (graphql(channelDetailsQuery, {
           updateQuery(previousResult, { fetchMoreResult }) {
             const prevMessageFeed = previousResult.channel.messageFeed
             const newMessageFeed = fetchMoreResult.channel.messageFeed
-            const newChannelData = Object.assign({}, previousResult.channel, {
-                messageFeed: {
-                  messages: [...newMessageFeed.messages, ...prevMessageFeed.messages],
-                  cursor: newMessageFeed.cursor
-                }
-            });
+            const newChannelData = {...previousResult.channel,
+              messageFeed: {
+                messages: [...newMessageFeed.messages, ...prevMessageFeed.messages],
+                cursor: newMessageFeed.cursor
+              }
+            }
             const newData =  {...previousResult, channel: newChannelData};
             return newData;
           }
         });
       }
-    });
+    };
   }
 })(ChannelDetails));
