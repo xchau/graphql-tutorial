@@ -5,32 +5,8 @@ import faker from 'faker';
 
 const channels = [{
   id: '1',
-  name: 'soccer',
-  messages: [{
-    id: '1',
-    text: 'soccer is football',
-  }, {
-    id: '2',
-    text: 'hello soccer world cup',
-  }, {
-    id: '3',
-    text: 'message3'
-  }, {
-    id: '4',
-    text: 'message4'
-  }, {
-    id: '5',
-    text: 'message5'
-  }, {
-    id: '6',
-    text: 'message6'
-  }, {
-    id: '7',
-    text: 'message7'
-  }, {
-    id: '8',
-    text: 'message8'
-  }]
+  name: 'faker',
+  messages: []
 }, {
   id: '2',
   name: 'baseball',
@@ -44,16 +20,19 @@ const channels = [{
 }];
 
 // use faker to generate random messages in soccer channel
-const channel = channels.find(channel => channel.name === 'soccer');
+const channel = channels.find(channel => channel.name === 'faker');
 let id;
-for (id = 9; id < 50; id++) {
+
+// Add seed for consistent random data
+faker.seed(9);
+for (id = 0; id < 50; id++) {
   channel.messages.push({
     id: id,
     text: faker.random.words()
   });
 }
 
-let nextId = 3;
+let nextId = channels.length;
 let nextMessageId = 52;
 
 const pubsub = new PubSub();
@@ -78,13 +57,13 @@ export const resolvers = {
         cursor: cursor - limit
       }
 
-      let lessChannel = {
+      let channelWithMessageFeed = {
         id: channel.id,
-        name: channel.name, 
+        name: channel.name,
         messageFeed: messageFeed
       }
 
-      return lessChannel;
+      return channelWithMessageFeed;
     },
   },
   Mutation: {
