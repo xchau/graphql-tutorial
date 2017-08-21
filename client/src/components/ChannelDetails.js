@@ -73,7 +73,7 @@ export const channelDetailsQuery = gql`
     channel(id: $channelId, cursor: $cursor) {
       id
       name
-      messageFeed(cursor: $cursor) {
+      messageFeed(cursor: $cursor) @connection(key: "messageFeed") {
         messages {
           id
           text
