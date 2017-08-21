@@ -28,7 +28,6 @@ const AddMessage = ({ mutate, match }) => {
               channelId: match.params.channelId,
             }
           });
-
           // don't double add the message
           if (!data.channel.messageFeed.messages.find((msg) => msg.id === addMessage.id)) {
             // Add our Message from the mutation to the end.
@@ -39,7 +38,6 @@ const AddMessage = ({ mutate, match }) => {
             query: channelDetailsQuery,
             variables: {
               channelId: match.params.channelId,
-              
             },
             data
           });

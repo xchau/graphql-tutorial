@@ -52,7 +52,7 @@ export const resolvers = {
     },
 
     channel: (root, args) => {
-      let id = args['id'];
+      let id = args.id
       let cursor = args['cursor'];
       let channel = channels.find(channel => channel.id === id);
       if (cursor == undefined && messageFeed == undefined) {
@@ -64,7 +64,6 @@ export const resolvers = {
         cursor: cursor - 2
       }
 
-      channel.messageFeed = messageFeed;
       let lessChannel = {
         id: channel.id,
         name: channel.name, 

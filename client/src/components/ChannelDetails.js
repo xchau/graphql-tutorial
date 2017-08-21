@@ -36,7 +36,7 @@ class ChannelDetails extends Component {
   }
 
   render() {
-    const { data: {loading, error, channel }, match, loadMore } = this.props;
+    const { data: {loading, error, channel }, match, loadOlderMessages } = this.props;
     if (loading) {
       return <ChannelPreview channelId={match.params.channelId}/>;
     }
@@ -54,7 +54,7 @@ class ChannelDetails extends Component {
         </div>
         <MessageList messages={channel.messageFeed.messages}/>
       </div>
-      <button onClick={loadMore}>
+      <button onClick={loadOlderMessages}>
         Load More
       </button>
       </div>
@@ -79,7 +79,7 @@ export const channelDetailsQuery = gql`
 `;
 
 const messagesSubscription = gql`
-  subscription messageAdded($channelId: Int) {
+  subscription messageAdded($channelId: ID!) {
     messageAdded(channelId: $channelId) {
       id
       text
@@ -91,32 +91,28 @@ export default (graphql(channelDetailsQuery, {
   options: (props) => ({
     variables: { 
       channelId: props.match.params.channelId,
-
     },
   }),
 
   props: (props) => {
-
     return Object.assign(props, {
-      loadMore: () => {
+      loadOlderMessages: () => {
         return props.data.fetchMore({
           variables: {
-            //channelId: props.match.params.channelId,
-            channelId: props.data.channel.id ? props.data.channel.id : props.match.params.channelId, 
+            channelId: props.data.channel.id,
             cursor: props.data.channel.messageFeed.cursor
           },
           updateQuery(previousResult, { fetchMoreResult }) {
-            let prevMessageFeed = previousResult.channel.messageFeed
-            let newMessageFeed = fetchMoreResult.channel.messageFeed
+            const prevMessageFeed = previousResult.channel.messageFeed
+            const newMessageFeed = fetchMoreResult.channel.messageFeed
             const newChannelData = Object.assign({}, previousResult.channel, {
                 messageFeed: {
-                  messages: [...fetchMoreResult.channel.messageFeed.messages, ...previousResult.channel.messageFeed.messages],
+                  messages: [...newMessageFeed.messages, ...prevMessageFeed.messages],
                   cursor: newMessageFeed.cursor
                 }
             });
-
-            const newData = Object.assign({}, previousResult, { channel: newChannelData });
-            return newData;
+            const newData =  {...previousResult, channel: newChannelData};
+            return newData
           }
         });
       }
