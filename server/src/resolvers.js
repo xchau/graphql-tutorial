@@ -2,38 +2,46 @@ import { PubSub } from 'graphql-subscriptions';
 import { withFilter } from 'graphql-subscriptions';
 import faker from 'faker';
 
+const channels = [];
+let lastChannelId = 0;
+let lastMessageId = 0;
 
-const channels = [{
-  id: '1',
-  name: 'faker',
-  messages: []
-}, {
-  id: '2',
-  name: 'baseball',
-  messages: [{
-    id: '50',
-    text: 'baseball is life',
-  }, {
-    id: '51',
-    text: 'hello baseball world series',
-  }]
-}];
+function addChannel(name) {
+  lastChannelId++;
+  const newChannel = {
+    id: lastChannelId,
+    name: name,
+    messages: []
+  }
+  channels.push(newChannel);
+}
 
-// use faker to generate random messages in soccer channel
+function getChannel(id) {
+  let channel = channels.find(channel => channel.id === id);
+  return channel;
+}
+
+function addMessage(channel, messageText) {
+  lastMessageId++;
+  const newMessage = {
+    id: lastMessageId,
+    text: messageText
+  }
+  channel.messages.push(newMessage);
+}
+
+// use faker to generate random messages in faker channel
+addChannel('faker');
 const channel = channels.find(channel => channel.name === 'faker');
-let id;
 
 // Add seed for consistent random data
 faker.seed(9);
-for (id = 0; id < 50; id++) {
+for (let id = 0; id < 50; id++) {
   channel.messages.push({
     id: id,
     text: faker.random.words()
   });
 }
-
-let nextId = channels.length;
-let nextMessageId = 52;
 
 const pubsub = new PubSub();
 
@@ -44,9 +52,9 @@ export const resolvers = {
     },
 
     channel: (root, args) => {
-      let id = args.id
+      let id = parseInt(args.id)
       let cursor = args.cursor
-      let channel = channels.find(channel => channel.id === id);
+      let channel = getChannel(id);
       if (cursor == undefined && messageFeed == undefined) {
         cursor = channel.messages.length;
       }
