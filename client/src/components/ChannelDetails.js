@@ -95,7 +95,8 @@ export default (graphql(channelDetailsQuery, {
   }),
 
   props: (props) => {
-    return {...props,
+    return {
+      data: props.data,
       loadOlderMessages: () => {
         return props.data.fetchMore({
           variables: {
@@ -118,4 +119,5 @@ export default (graphql(channelDetailsQuery, {
       }
     };
   }
+  
 })(ChannelDetails));
