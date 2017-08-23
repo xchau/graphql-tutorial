@@ -53,6 +53,7 @@ export const resolvers = {
 
     channel: (root, {id, cursor}) => {
       const channel = getChannel(id);
+      /*
       if (!cursor) {
         cursor = channel.messages.length;
       }
@@ -61,14 +62,29 @@ export const resolvers = {
         messages: channel.messages.slice(cursor-limit, cursor),
         cursor: cursor - limit
       }
-
+      */
+      /*
       let channelWithMessageFeed = {
         id: channel.id,
         name: channel.name,
         messageFeed: messageFeed
       }
-      return channelWithMessageFeed;
+      */
+      return channel;
     },
+  },
+  Channel: {
+    messageFeed: (channel, {cursor}) => {
+      if (!cursor) {
+        cursor = channel.messages.length;
+      }
+      let limit = 10;
+      let messageFeed = {
+        messages: channel.messages.slice(cursor-limit, cursor),
+        cursor: cursor - limit
+      }
+      return messageFeed;
+    }
   },
   Mutation: {
     addChannel: (root, args) => {

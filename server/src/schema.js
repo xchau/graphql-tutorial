@@ -32,8 +32,6 @@ type MessageFeed {
 type Query {
   channels: [Channel]    # "[]" means this is a list of channels
   channel(id: ID!, cursor: Int): Channel
-  messageFeed(cursor: Int): MessageFeed
-  
 }
 
 # The mutation root type, used to define all mutations
