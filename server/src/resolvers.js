@@ -52,8 +52,7 @@ export const resolvers = {
     },
 
     channel: (root, {id, cursor}) => {
-      const channel = getChannel(id);
-      return channel;
+      return getChannel(id);
     },
   },
   Channel: {
