@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
-import {
-  BrowserRouter,
-  Link,
-  Route,
-  Switch,
-} from 'react-router-dom';
+import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 
 import './App.css';
 import ChannelsListWithData from './components/ChannelsListWithData';
@@ -18,17 +13,24 @@ import {
   toIdValue,
 } from 'react-apollo';
 
-import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
+import {
+  SubscriptionClient,
+  addGraphQLSubscriptions,
+} from 'subscriptions-transport-ws';
 
-const networkInterface = createNetworkInterface({ uri: 'http://localhost:4000/graphql' });
-networkInterface.use([{
-  applyMiddleware(req, next) {
-    setTimeout(next, 500);
+const networkInterface = createNetworkInterface({
+  uri: 'http://localhost:4000/graphql',
+});
+networkInterface.use([
+  {
+    applyMiddleware(req, next) {
+      setTimeout(next, 500);
+    },
   },
-}]);
+]);
 
 const wsClient = new SubscriptionClient(`ws://localhost:4000/subscriptions`, {
-  reconnect: true
+  reconnect: true,
 });
 
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
@@ -36,7 +38,7 @@ const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
   wsClient
 );
 
-function dataIdFromObject (result) {
+function dataIdFromObject(result) {
   if (result.__typename) {
     if (result.id !== undefined) {
       return `${result.__typename}:${result.id}`;
@@ -50,7 +52,9 @@ const client = new ApolloClient({
   customResolvers: {
     Query: {
       channel: (_, args) => {
-        return toIdValue(dataIdFromObject({ __typename: 'Channel', id: args['id'] }))
+        return toIdValue(
+          dataIdFromObject({ __typename: 'Channel', id: args['id'] })
+        );
       },
     },
   },
@@ -63,11 +67,13 @@ class App extends Component {
       <ApolloProvider client={client}>
         <BrowserRouter>
           <div className="App">
-            <Link to="/" className="navbar">React + GraphQL Tutorial</Link>
+            <Link to="/" className="navbar">
+              React + GraphQL Tutorial
+            </Link>
             <Switch>
-              <Route exact path="/" component={ChannelsListWithData}/>
-              <Route path="/channel/:channelId" component={ChannelDetails}/>
-              <Route component={ NotFound }/>
+              <Route exact path="/" component={ChannelsListWithData} />
+              <Route path="/channel/:channelId" component={ChannelDetails} />
+              <Route component={NotFound} />
             </Switch>
           </div>
         </BrowserRouter>

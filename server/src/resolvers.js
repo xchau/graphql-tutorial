@@ -11,8 +11,8 @@ function addChannel(name) {
   const newChannel = {
     id: String(lastChannelId),
     name: name,
-    messages: []
-  }
+    messages: [],
+  };
   channels.push(newChannel);
   return lastChannelId;
 }
@@ -25,8 +25,8 @@ function addMessage(channel, messageText) {
   lastMessageId++;
   const newMessage = {
     id: lastMessageId,
-    text: messageText
-  }
+    text: messageText,
+  };
   channel.messages.push(newMessage);
 }
 
@@ -51,50 +51,57 @@ export const resolvers = {
       return channels;
     },
 
-    channel: (root, {id, cursor}) => {
+    channel: (root, { id, cursor }) => {
       return getChannel(id);
     },
   },
   Channel: {
-    messageFeed: (channel, {cursor}) => {
+    messageFeed: (channel, { cursor }) => {
       if (!cursor) {
         cursor = channel.messages.length;
       }
       cursor = parseInt(cursor);
       let limit = 10;
       let messageFeed = {
-        messages: channel.messages.slice(cursor-limit, cursor),
-        cursor: cursor - limit
-      }
+        messages: channel.messages.slice(cursor - limit, cursor),
+        cursor: cursor - limit,
+      };
       return messageFeed;
-    }
+    },
   },
   Mutation: {
     addChannel: (root, args) => {
-      const name = args.name
+      const name = args.name;
       const id = addChannel(name);
       return getChannel(id);
     },
     addMessage: (root, { message }) => {
-      const channel = channels.find(channel => channel.id === (message.channelId));
-      if(!channel)
-        throw new Error("Channel does not exist");
+      const channel = channels.find(
+        channel => channel.id === message.channelId
+      );
+      if (!channel) throw new Error('Channel does not exist');
 
       const newMessage = { id: String(lastMessageId++), text: message.text };
       channel.messages.push(newMessage);
 
-      pubsub.publish('messageAdded', { messageAdded: newMessage, channelId: message.channelId });
+      pubsub.publish('messageAdded', {
+        messageAdded: newMessage,
+        channelId: message.channelId,
+      });
 
       return newMessage;
     },
   },
   Subscription: {
     messageAdded: {
-      subscribe: withFilter(() => pubsub.asyncIterator('messageAdded'), (payload, variables) => {
-        // The `messageAdded` channel includes events for all channels, so we filter to only
-        // pass through events for the channel specified in the query
-        return payload.channelId === variables.channelId;
-      }),
-    }
+      subscribe: withFilter(
+        () => pubsub.asyncIterator('messageAdded'),
+        (payload, variables) => {
+          // The `messageAdded` channel includes events for all channels, so we filter to only
+          // pass through events for the channel specified in the query
+          return payload.channelId === variables.channelId;
+        }
+      ),
+    },
   },
 };
