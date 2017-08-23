@@ -64,7 +64,7 @@ class ChannelDetails extends Component {
 
 export const channelDetailsQuery = gql`
   query ChannelDetailsQuery($channelId : ID!, $cursor: String) {
-    channel(id: $channelId, cursor: $cursor) {
+    channel(id: $channelId) {
       id
       name
       messageFeed(cursor: $cursor) @connection(key: "messageFeed") {
