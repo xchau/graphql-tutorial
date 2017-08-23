@@ -14,11 +14,11 @@ function addChannel(name) {
     messages: []
   }
   channels.push(newChannel);
+  return lastChannelId;
 }
 
 function getChannel(id) {
-  let channel = channels.find(channel => channel.id === id);
-  return channel;
+  return channels.find(channel => channel.id === id);
 }
 
 function addMessage(channel, messageText) {
@@ -32,7 +32,7 @@ function addMessage(channel, messageText) {
 
 // use faker to generate random messages in faker channel
 addChannel('faker');
-let fakerChannel = channels.find(channel => channel.name === 'faker');
+const fakerChannel = channels.find(channel => channel.name === 'faker');
 
 // Add seed for consistent random data
 faker.seed(9);
@@ -53,29 +53,32 @@ export const resolvers = {
 
     channel: (root, {id, cursor}) => {
       const channel = getChannel(id);
+
       if (!cursor) {
         cursor = channel.messages.length;
       }
-      let limit = 10;
-      let messageFeed = {
-        messages: channel.messages.slice(cursor-limit, cursor),
-        cursor: cursor - limit
-      }
 
-      let channelWithMessageFeed = {
+      const limit = 10;
+
+      const messageFeed = {
+        messages: channel.messages.slice(cursor-limit, cursor),
+        cursor: cursor - limit,
+      };
+
+      const channelWithMessageFeed = {
         id: channel.id,
         name: channel.name,
-        messageFeed: messageFeed
-      }
+        messageFeed,
+      };
+
       return channelWithMessageFeed;
     },
   },
   Mutation: {
     addChannel: (root, args) => {
       const name = args.name
-      addChannel(name);
-      let newChannel = getChannel(lastChannelId);
-      return newChannel;
+      const id = addChannel(name);
+      return getChannel(id);
     },
     addMessage: (root, { message }) => {
       const channel = channels.find(channel => channel.id === (message.channelId));

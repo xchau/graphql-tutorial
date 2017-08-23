@@ -63,7 +63,7 @@ class ChannelDetails extends Component {
 }
 
 export const channelDetailsQuery = gql`
-  query ChannelDetailsQuery($channelId : ID!, $cursor: Int) {
+  query ChannelDetailsQuery($channelId : ID!, $cursor: String) {
     channel(id: $channelId, cursor: $cursor) {
       id
       name
@@ -89,7 +89,7 @@ const messagesSubscription = gql`
 
 export default (graphql(channelDetailsQuery, {
   options: (props) => ({
-    variables: { 
+    variables: {
       channelId: props.match.params.channelId,
     },
   }),
@@ -104,20 +104,24 @@ export default (graphql(channelDetailsQuery, {
             cursor: props.data.channel.messageFeed.cursor,
           },
           updateQuery(previousResult, { fetchMoreResult }) {
-            const prevMessageFeed = previousResult.channel.messageFeed
-            const newMessageFeed = fetchMoreResult.channel.messageFeed
-            const newChannelData = {...previousResult.channel,
+            const prevMessageFeed = previousResult.channel.messageFeed;
+            const newMessageFeed = fetchMoreResult.channel.messageFeed;
+
+            const newChannelData = {
+              ...previousResult.channel,
               messageFeed: {
                 messages: [...newMessageFeed.messages, ...prevMessageFeed.messages],
-                cursor: newMessageFeed.cursor
-              }
-            }
+                cursor: newMessageFeed.cursor,
+              },
+            };
+
             const newData =  {...previousResult, channel: newChannelData};
+
             return newData;
           }
         });
       }
     };
   }
-  
+
 })(ChannelDetails));

@@ -10,7 +10,7 @@ type Channel {
   id: ID!                # "!" denotes a required field
   name: String
   messages: [Message]
-  messageFeed(cursor: Int): MessageFeed  # messages will be returned in a MessageFeed object
+  messageFeed(cursor: String): MessageFeed  # messages will be returned in a MessageFeed object
 }
 
 input MessageInput{
@@ -31,9 +31,9 @@ type MessageFeed {
 # This type specifies the entry points into our API
 type Query {
   channels: [Channel]    # "[]" means this is a list of channels
-  channel(id: ID!, cursor: Int): Channel
-  messageFeed(cursor: Int): MessageFeed
-  
+  channel(id: ID!, cursor: String): Channel
+  messageFeed(cursor: String): MessageFeed
+
 }
 
 # The mutation root type, used to define all mutations
