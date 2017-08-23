@@ -28,7 +28,7 @@ type MessageFeed {
 # This type specifies the entry points into our API
 type Query {
   channels: [Channel]    # "[]" means this is a list of channels
-  channel(id: ID!, cursor: String): Channel
+  channel(id: ID!): Channel
 }
 
 # The mutation root type, used to define all mutations
