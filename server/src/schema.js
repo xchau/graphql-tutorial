@@ -7,7 +7,6 @@ type Channel {
   id: ID!                # "!" denotes a required field
   name: String
   messages: [Message]
-  messageFeed(cursor: String): MessageFeed  # messages will be returned in a MessageFeed object
 }
 
 input MessageInput{
