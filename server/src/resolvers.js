@@ -91,7 +91,12 @@ export const resolvers = {
       );
       if (!channel) throw new Error('Channel does not exist');
 
-      const newMessage = { id: String(lastMessageId++), text: message.text };
+      const newMessage = {
+        id: String(lastMessageId++),
+        text: message.text,
+        createdAt: +new Date(),
+      };
+      console.log('newMessage: ', newMessage);
       channel.messages.push(newMessage);
 
       pubsub.publish('messageAdded', {
