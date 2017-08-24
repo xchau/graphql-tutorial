@@ -96,7 +96,6 @@ export const resolvers = {
         text: message.text,
         createdAt: +new Date(),
       };
-      console.log('newMessage: ', newMessage);
       channel.messages.push(newMessage);
 
       pubsub.publish('messageAdded', {
