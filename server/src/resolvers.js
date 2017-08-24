@@ -5,6 +5,7 @@ import faker from 'faker';
 const channels = [];
 let lastChannelId = 0;
 let lastMessageId = 0;
+let messageCreatedAt = 123456789;
 
 function addChannel(name) {
   lastChannelId++;
@@ -21,10 +22,12 @@ function getChannel(id) {
   return channels.find(channel => channel.id === id);
 }
 
-function addMessage(channel, messageText) {
+function addFakeMessage(channel, messageText) {
   lastMessageId++;
+  messageCreatedAt++;
   const newMessage = {
     id: lastMessageId,
+    createdAt: messageCreatedAt,
     text: messageText,
   };
   channel.messages.push(newMessage);
@@ -37,7 +40,7 @@ const fakerChannel = channels.find(channel => channel.name === 'faker');
 // Add seed for consistent random data
 faker.seed(9);
 for (let i = 0; i < 50; i++) {
-  addMessage(fakerChannel, faker.random.words());
+  addFakeMessage(fakerChannel, faker.random.words());
 }
 
 // generate second channel for initial channel list view
@@ -58,13 +61,20 @@ export const resolvers = {
   Channel: {
     messageFeed: (channel, { cursor }) => {
       if (!cursor) {
-        cursor = channel.messages.length;
+        cursor = channel.messages[channel.messages.length - 1].createdAt;
       }
       cursor = parseInt(cursor);
       let limit = 10;
+      const newestMessageIndex = channel.messages.findIndex(
+        message => message.createdAt === cursor
+      );
+      const newCursor = channel.messages[newestMessageIndex - limit].createdAt;
       let messageFeed = {
-        messages: channel.messages.slice(cursor - limit, cursor),
-        cursor: cursor - limit,
+        messages: channel.messages.slice(
+          newestMessageIndex - limit,
+          newestMessageIndex
+        ),
+        cursor: newCursor,
       };
       return messageFeed;
     },
