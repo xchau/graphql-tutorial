@@ -19,11 +19,6 @@ type Message {
   text: String
 }
 
-type MessageFeed {
-  cursor: String,
-  messages: [Message]! # messages in the message feed will be a list of messages
-}
-
 # This type specifies the entry points into our API
 type Query {
   channels: [Channel]    # "[]" means this is a list of channels
