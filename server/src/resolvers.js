@@ -3,22 +3,23 @@ const channels = [{
   name: 'soccer',
   messages: [{
     id: '1',
-    text: 'soccer is football',
+    text: 'it\'s called football, ignorant americans',
   }, {
     id: '2',
-    text: 'hello soccer world cup',
+    text: 'world cup fever baby',
   }]
 }, {
   id: '2',
   name: 'baseball',
   messages: [{
     id: '3',
-    text: 'baseball is life',
+    text: 'baseball is as american as apple pie',
   }, {
     id: '4',
     text: 'hello baseball world series',
   }]
 }];
+
 let nextId = 3;
 let nextMessageId = 5;
 
@@ -27,6 +28,9 @@ export const resolvers = {
     channels: () => {
       return channels;
     },
+    channel: (root, { id }) => {
+      return channels.find(channel => channel.id === id)
+    }
   },
   Mutation: {
     addChannel: (root, args) => {
@@ -34,5 +38,15 @@ export const resolvers = {
       channels.push(newChannel);
       return newChannel;
     },
+    addMessage: (root, { message }) => {
+      const channel = channels.find(channel => channel.id === message.channelId);
+      if (!channel) throw new Error('Channel does not exist');
+      const newMessage = {
+        id: String(nextMessageId++),
+        text: message.text
+      };
+      channel.messages.push(newMessage);
+      return newMessage;
+    }
   },
 };

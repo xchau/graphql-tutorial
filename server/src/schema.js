@@ -6,19 +6,31 @@ import {
 import { resolvers } from './resolvers';
 
 const typeDefs = `
-type Channel {
-  id: ID!                # "!" denotes a required field
-  name: String
-}
-# This type specifies the entry points into our API
-type Query {
-  channels: [Channel]    # "[]" means this is a list of channels
-}
+  type Channel {
+    id: ID!                
+    name: String
+    messages: [Message]!
+  }
 
-# The mutation root type, used to define all mutations
-type Mutation {
-  addChannel(name: String!): Channel
-}
+  type Message {
+    id: ID!
+    text: String
+  }
+
+  type MessageInput {
+    channelId: ID!
+    text: String
+  }
+
+  type Query {
+    channels: [Channel],
+    channel(id: ID!): Channel   
+  }
+
+  type Mutation {
+    addChannel(name: String!): Channel
+    addMessage(message: MessageInput!): Message
+  }
 `;
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
