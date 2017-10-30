@@ -17,7 +17,7 @@ const typeDefs = `
     text: String
   }
 
-  type MessageInput {
+  input MessageInput {
     channelId: ID!
     text: String
   }
