@@ -4,16 +4,16 @@ import ChannelPreview from './ChannelPreview';
 import NotFound from './NotFound';
 
 import {
-    gql,
-    graphql,
+  gql,
+  graphql,
 } from 'react-apollo';
 
 const ChannelDetails = ({ data: { loading, error, channel }, match }) => {
   if (loading) {
-    return <p>Loading...</p>;
+    return <ChannelPreview channelId={match.params.channelId} />;
   }
   if (error) {
-    return <p>{error.message}</p>
+    return <p>{error.message}</p>;
   }
   if (channel === null) {
     return <NotFound />

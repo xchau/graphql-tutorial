@@ -28,7 +28,7 @@ networkInterface.use([{
 
 function dataIdFromObject (result) {
   if (result.__typename) {
-    if (result.id !== undefined) {
+    if (!result.id) {
       return `${result.__typename}:${result.id}`;
     }
   }
@@ -37,9 +37,18 @@ function dataIdFromObject (result) {
 
 const client = new ApolloClient({
   networkInterface,
+  customResolvers: {
+    Query: {
+      channel: (_, args) => {
+        return toIdValue(dataIdFromObject({
+          ___typename: 'Channel',
+          id: args['id']
+        }))
+      }
+    }
+  },
   dataIdFromObject,
 });
-
 
 class App extends Component {
   render() {
