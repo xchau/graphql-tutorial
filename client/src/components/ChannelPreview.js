@@ -4,24 +4,22 @@ import {
     graphql,
 } from 'react-apollo';
 
-// import NotFound from './NotFound';
 
-const ChannelPreview = ({ data: { loading, error, channel } }) => {
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
+const ChannelPreview = ({ data: {loading, error, channel } }) => {
+  if (loading) {
+    return <p>Loading ...</p>;
+  }
   if (error) {
-    return <div>{error.message}</div>;
+    return <p>{error.message}</p>;
   }
 
   return (
     <div>
       <div className="channelName">
-        { channel ? channel.name : 'Loading...' }
+        {channel.name}
       </div>
       <div>Loading Messages</div>
-    </div>
-  );
+    </div>);
 };
 
 export const channelQuery = gql`
@@ -33,11 +31,8 @@ export const channelQuery = gql`
   }
 `;
 
-// export default (ChannelPreview);
-export default (
-  graphql(channelQuery, {
-    options: (props) => ({
-      variables: { channelId: props.channelId }
-    })
-  })(ChannelPreview)
-);
+export default (graphql(channelQuery, {
+  options: (props) => ({
+    variables: { channelId: props.channelId },
+  }),
+})(ChannelPreview));
