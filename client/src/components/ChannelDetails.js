@@ -15,7 +15,7 @@ const ChannelDetails = ({ data: { loading, error, channel }, match }) => {
   if (error) {
     return <p>{error.message}</p>;
   }
-  if (channel === null) {
+  if (!channel) {
     return <NotFound />
   }
 

@@ -23,7 +23,7 @@ const ChannelPreview = ({ data: {loading, error, channel } }) => {
 };
 
 export const channelQuery = gql`
-  query ChannelQuery($channelId: ID!) {
+  query ChannelQuery($channelId : ID!) {
     channel(id: $channelId) {
       id
       name
